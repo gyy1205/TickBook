@@ -206,9 +206,9 @@ function LongArrow({ show }: { show: boolean }) {
         style={{
           width: 0,
           height: 0,
-          borderLeft: '2cqw solid #1a1a1a',
-          borderTop: '0.7cqw solid transparent',
-          borderBottom: '0.7cqw solid transparent',
+          borderLeft: '8px solid #1a1a1a',
+          borderTop: '3px solid transparent',
+          borderBottom: '3px solid transparent',
         }}
       />
     </div>

@@ -13,6 +13,7 @@
 - 车次下方向右箭头装饰
 - 虚线框可编辑服务提示文字
 - 右下角可编辑二维码，微信扫码读取
+- **保存为图片**：票根可一键保存为 PNG 图片下载
 - 按车次、站名、乘客名搜索筛选
 - **数据统计**：出行单据数、累计花费、到访城市、乘车时长
 - **列车种类占比**：饼图展示 G/D/C/K/Z/T/Y/L 各车次分类
@@ -30,6 +31,7 @@
 | 状态管理 | Zustand |
 | 样式 | Tailwind CSS |
 | 图表 | Recharts |
+| 截图保存 | modern-screenshot |
 | 二维码 | qrcode |
 | 拼音 | pinyin-pro |
 | 后端 | Supabase（BaaS） |
@@ -102,7 +104,7 @@ TickBook/
     │   ├── Dashboard.tsx         # 票据列表（按年/月分组）
     │   ├── TicketCreate.tsx      # 新建票据
     │   ├── TicketEdit.tsx        # 编辑票据
-    │   ├── TicketDetail.tsx      # 票据详情
+    │   ├── TicketDetail.tsx      # 票据详情（含保存图片）
     │   └── Statistics.tsx        # 数据统计
     │
     ├── services/                 # 数据操作层

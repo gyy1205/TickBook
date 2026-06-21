@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
+import { domToPng } from 'modern-screenshot';
 import type { Ticket } from '../types';
 import { fetchTicket, deleteTicket } from '../services/ticketService';
 import TicketTemplate from '../components/TicketTemplate';
@@ -9,6 +10,8 @@ export default function TicketDetail() {
   const navigate = useNavigate();
   const [ticket, setTicket] = useState<Ticket | null>(null);
   const [loading, setLoading] = useState(true);
+  const [savingImg, setSavingImg] = useState(false);
+  const ticketRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!id) return;
@@ -20,6 +23,26 @@ export default function TicketDetail() {
       })
       .finally(() => setLoading(false));
   }, [id, navigate]);
+
+  const handleSaveImage = async () => {
+    if (!ticketRef.current) return;
+    setSavingImg(true);
+    try {
+      const dataUrl = await domToPng(ticketRef.current, {
+        backgroundColor: '#ffffff',
+        scale: 2,
+      });
+      const link = document.createElement('a');
+      link.download = `ticket_${ticket?.train_number || 'unknown'}.png`;
+      link.href = dataUrl;
+      link.click();
+    } catch (err) {
+      console.error('保存图片失败:', err);
+      alert('保存失败');
+    } finally {
+      setSavingImg(false);
+    }
+  };
 
   const handleDelete = async () => {
     if (!id || !confirm('确定删除这张票据吗？')) return;
@@ -49,6 +72,13 @@ export default function TicketDetail() {
             编辑
           </Link>
           <button
+            onClick={handleSaveImage}
+            disabled={savingImg}
+            className="text-sm text-green-600 hover:text-green-800"
+          >
+            {savingImg ? '保存中...' : '保存图片'}
+          </button>
+          <button
             onClick={handleDelete}
             className="text-sm text-red-400 hover:text-red-600"
           >
@@ -57,7 +87,9 @@ export default function TicketDetail() {
         </div>
       </div>
 
-      <TicketTemplate ticket={ticket} />
+      <div ref={ticketRef}>
+        <TicketTemplate ticket={ticket} />
+      </div>
     </div>
   );
 }
