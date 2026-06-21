@@ -14,6 +14,12 @@ node_modules
 dist
 dist-ssr
 
+# Source materials (raw template images)
+票根模板/
+
+# Claude config
+.claude/
+
 # Environment variables (contains Supabase keys)
 .env
 !.env.example

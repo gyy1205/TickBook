@@ -15,6 +15,14 @@ export interface Ticket {
   price: number;
   serial_number: string;
   notes: string;
+  gate_info: string;
+  departure_station_en: string;
+  arrival_station_en: string;
+  is_student: boolean;
+  passenger_id: string;
+  service_text: string;
+  qr_content: string;
+  template?: string;
   image_url?: string;
   created_at?: string;
   updated_at?: string;
@@ -35,4 +43,11 @@ export const emptyTicket: Ticket = {
   price: 0,
   serial_number: '',
   notes: '',
+  gate_info: '检票口：',
+  departure_station_en: '',
+  arrival_station_en: '',
+  is_student: false,
+  passenger_id: '',
+  service_text: '买票请到12306 发货请到95306\n中国铁路祝您旅途愉快',
+  qr_content: '',
 };

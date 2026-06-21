@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { Ticket } from '../types';
+import { TEMPLATES } from '../config/templates';
 import TicketTemplate from './TicketTemplate';
 
 interface Props {
@@ -11,7 +12,7 @@ interface Props {
 export default function TicketForm({ initial, onSave, saving }: Props) {
   const [ticket, setTicket] = useState<Ticket>(initial);
 
-  const update = (field: keyof Ticket, value: string | number) => {
+  const update = (field: keyof Ticket, value: string | number | boolean) => {
     setTicket((prev) => ({ ...prev, [field]: value }));
   };
 
@@ -47,6 +48,29 @@ export default function TicketForm({ initial, onSave, saving }: Props) {
               </label>
             ))}
           </div>
+          <label className="flex items-center gap-2 cursor-pointer ml-4">
+            <input
+              type="checkbox"
+              checked={ticket.is_student}
+              onChange={(e) => update('is_student', e.target.checked)}
+              className="accent-blue-600"
+            />
+            <span className="text-sm text-gray-700">学生票</span>
+          </label>
+        </div>
+
+        {/* 模板选择 */}
+        <div>
+          <label className={labelClass}>票根模板</label>
+          <select
+            value={ticket.template || 'none'}
+            onChange={(e) => update('template', e.target.value)}
+            className={inputClass}
+          >
+            {TEMPLATES.map((t) => (
+              <option key={t.id} value={t.id}>{t.name}</option>
+            ))}
+          </select>
         </div>
 
         {/* 车次 */}
@@ -183,6 +207,18 @@ export default function TicketForm({ initial, onSave, saving }: Props) {
           </div>
         </div>
 
+        {/* 身份证号 */}
+        <div>
+          <label className={labelClass}>乘车人身份证号</label>
+          <input
+            type="text"
+            value={ticket.passenger_id}
+            onChange={(e) => update('passenger_id', e.target.value)}
+            placeholder="如 320621200401010756（脱敏存储）"
+            className={inputClass}
+          />
+        </div>
+
         {/* 票号 */}
         <div>
           <label className={labelClass}>票号 / 流水号</label>
@@ -195,6 +231,18 @@ export default function TicketForm({ initial, onSave, saving }: Props) {
           />
         </div>
 
+        {/* 检票口 */}
+        <div>
+          <label className={labelClass}>检票口</label>
+          <input
+            type="text"
+            value={ticket.gate_info}
+            onChange={(e) => update('gate_info', e.target.value)}
+            placeholder="如 一楼检票口"
+            className={inputClass}
+          />
+        </div>
+
         {/* 备注 */}
         <div>
           <label className={labelClass}>备注</label>
@@ -202,7 +250,31 @@ export default function TicketForm({ initial, onSave, saving }: Props) {
             value={ticket.notes}
             onChange={(e) => update('notes', e.target.value)}
             rows={2}
-            placeholder="备注信息（可选）"
+            placeholder="备注信息（可选），第一行=备注1，第二行=备注2"
+            className={inputClass}
+          />
+        </div>
+
+        {/* 二维码内容 */}
+        <div>
+          <label className={labelClass}>二维码内容</label>
+          <input
+            type="text"
+            value={ticket.qr_content}
+            onChange={(e) => update('qr_content', e.target.value)}
+            placeholder="扫描二维码显示的内容，如：票号或网址"
+            className={inputClass}
+          />
+        </div>
+
+        {/* 底部服务提示 */}
+        <div>
+          <label className={labelClass}>底部提示文字（虚线框内）</label>
+          <textarea
+            value={ticket.service_text}
+            onChange={(e) => update('service_text', e.target.value)}
+            rows={2}
+            placeholder="如：买票请到12306"
             className={inputClass}
           />
         </div>
