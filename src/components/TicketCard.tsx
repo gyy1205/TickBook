@@ -19,18 +19,27 @@ export default function TicketCard({ ticket, onDelete }: Props) {
         <span className="text-lg font-bold text-orange-500">¥{ticket.price}</span>
       </div>
 
-      <div className="text-sm text-gray-600 space-y-1 mb-3">
-        <div className="flex justify-between">
-          <span>{ticket.departure_station}</span>
-          <span className="text-gray-400">→</span>
-          <span>{ticket.arrival_station}</span>
+      <div className="mb-3">
+        {/* 站名行 */}
+        <div className="flex justify-center items-center gap-10 leading-tight">
+          <span className="text-lg font-bold text-gray-800">{ticket.departure_station}</span>
+          <span className="text-gray-400 text-xl">→</span>
+          <span className="text-lg font-bold text-gray-800">{ticket.arrival_station}</span>
         </div>
-        <div className="flex justify-between text-gray-400">
-          <span>{ticket.departure_date} {ticket.departure_time}</span>
+
+        {/* 时间行 */}
+        <div className="flex justify-center gap-10 text-base text-gray-400 leading-tight">
+          <span>{ticket.departure_time}</span>
+          <span className="text-transparent text-xl">→</span>
           <span>{ticket.arrival_time}</span>
         </div>
-        <div>
-          {ticket.passenger_name} | {ticket.carriage_no}车{ticket.seat_no}号
+
+        {/* 日期 + 乘客/座位 */}
+        <div className="flex justify-between items-center text-sm text-gray-700 mt-1">
+          <span>{ticket.departure_date}</span>
+          <span>
+            {ticket.passenger_name}<span className="text-gray-300 mx-1">|</span>{ticket.carriage_no}车{ticket.seat_no}号
+          </span>
         </div>
       </div>
 

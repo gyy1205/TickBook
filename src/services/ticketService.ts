@@ -5,7 +5,8 @@ export async function fetchTickets(): Promise<Ticket[]> {
   const { data, error } = await supabase
     .from('tickets')
     .select('*')
-    .order('created_at', { ascending: false });
+    .order('departure_date', { ascending: true })
+    .order('departure_time', { ascending: true });
 
   if (error) throw error;
   return data;

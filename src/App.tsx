@@ -9,6 +9,7 @@ import Dashboard from './pages/Dashboard';
 import TicketCreate from './pages/TicketCreate';
 import TicketEdit from './pages/TicketEdit';
 import TicketDetail from './pages/TicketDetail';
+import Statistics from './pages/Statistics';
 
 export default function App() {
   const { setSession, refreshSession } = useAuthStore();
@@ -38,6 +39,7 @@ export default function App() {
           <Route path="/tickets/new" element={<TicketCreate />} />
           <Route path="/tickets/:id" element={<TicketDetail />} />
           <Route path="/tickets/:id/edit" element={<TicketEdit />} />
+          <Route path="/statistics" element={<Statistics />} />
         </Route>
       </Routes>
     </BrowserRouter>
