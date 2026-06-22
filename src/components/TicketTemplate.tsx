@@ -99,7 +99,7 @@ export default function TicketTemplate({ ticket }: Props) {
         className="relative w-full overflow-hidden rounded-lg"
         style={{ containerType: 'inline-size', aspectRatio: tpl.aspectRatio }}
       >
-        <img src={tpl.image} alt={tpl.name} className="absolute inset-0 w-full h-full object-cover" />
+        <img src={tpl.image ? (import.meta.env.BASE_URL + tpl.image.replace(/^\//, '')) : ''} alt={tpl.name} className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0">
           {/* 1. 票号 */}
           <Field field={f.serial_number} value={ticket.serial_number || ''} />
