@@ -134,3 +134,99 @@ export function topStations(
     .sort((a, b) => b.count - a.count)
     .slice(0, n);
 }
+
+// ---- 坐席统计工具 ----
+
+/** 提取座位号的字母部分（如 "12F" → "F"，纯数字 → ""） */
+function seatLetter(seatNo: string): string {
+  const m = seatNo.trim().match(/[A-Za-z]+$/);
+  return m ? m[0].toUpperCase() : '';
+}
+
+/** 提取座位号的数字尾数（如 "12" → 2, "05" → 5） */
+function seatEndDigit(seatNo: string): number | null {
+  // 去掉字母后缀，取最后一位数字
+  const numStr = seatNo.trim().replace(/[A-Za-z]+$/, '');
+  if (!numStr) return null;
+  const last = parseInt(numStr.slice(-1), 10);
+  return isNaN(last) ? null : last;
+}
+
+export type SeatPosition = 'window' | 'aisle' | 'middle';
+
+/** 判定座位是靠窗/过道/中间 */
+export function classifySeatPosition(seatClass: string, seatNo: string): SeatPosition | null {
+  if (!seatNo) return null;
+  const letter = seatLetter(seatNo);
+  const digit = seatEndDigit(seatNo);
+
+  if (letter) {
+    // 字母座位（动车组规则）
+    if (letter === 'A' || letter === 'F') return 'window';
+    if (letter === 'C' || letter === 'D') return 'aisle';
+    if (letter === 'B') {
+      // 一等座B:=靠过道，二等座B:=中间
+      return seatClass === '一等座' ? 'aisle' : 'middle';
+    }
+    return 'middle';
+  }
+
+  if (digit !== null) {
+    // 纯数字座位（普速列车）
+    if ([0, 4, 5, 9].includes(digit)) return 'window';
+    if ([2, 3, 7, 8].includes(digit)) return 'aisle';
+    return 'middle';
+  }
+
+  return null;
+}
+
+export interface SeatPositionStats {
+  window: number; aisle: number; middle: number; noseat: number;
+}
+
+/** 按靠窗/过道/中间分组统计 */
+export function groupBySeatPosition(tickets: Ticket[]): SeatPositionStats {
+  const result = { window: 0, aisle: 0, middle: 0, noseat: 0 };
+  tickets.forEach((t) => {
+    if (t.seat_class?.includes('无座') || t.seat_no?.includes('无座')) {
+      result.noseat++;
+      return;
+    }
+    const pos = classifySeatPosition(t.seat_class, t.seat_no);
+    if (pos) result[pos]++;
+  });
+  return result;
+}
+
+export interface EMUSeatStats {
+  A: number; B: number; C: number; D: number; F: number;
+}
+
+/** 按动车组坐席字母统计 A/B/C/D/F */
+export function groupByEMUSeat(tickets: Ticket[]): EMUSeatStats {
+  const result = { A: 0, B: 0, C: 0, D: 0, F: 0 };
+  tickets.forEach((t) => {
+    const l = seatLetter(t.seat_no);
+    if (l === 'A' || l === 'B' || l === 'C' || l === 'D' || l === 'F') {
+      result[l]++;
+    }
+  });
+  return result;
+}
+
+export interface BerthStats {
+  upper: number; middle: number; lower: number;
+}
+
+/** 按铺位统计 上/中/下铺 */
+export function groupByBerth(tickets: Ticket[]): BerthStats {
+  const result = { upper: 0, middle: 0, lower: 0 };
+  tickets.forEach((t) => {
+    const sn = t.seat_no.trim();
+    if (sn.includes('上')) result.upper++;
+    else if (sn.includes('中')) result.middle++;
+    else if (sn.includes('下')) result.lower++;
+  });
+  return result;
+}

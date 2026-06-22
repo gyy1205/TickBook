@@ -45,7 +45,7 @@ export default function TicketTemplate({ ticket }: Props) {
   const fmtCarriage = () => (
     <>
       {ticket.carriage_no ? <>{ticket.carriage_no}<span style={{...unitStyle, ...unitGap}}>车</span></> : ''}
-      {ticket.seat_no ? <>{ticket.seat_no}<span style={{...unitStyle, ...unitGap}}>号</span></> : ''}
+      {ticket.seat_no ? <>{ticket.seat_no}{ticket.seat_no !== '无座' && <span style={{...unitStyle, ...unitGap}}>号</span>}</> : ''}
     </>
   );
 
@@ -107,16 +107,30 @@ export default function TicketTemplate({ ticket }: Props) {
           <Field field={f.gate_info} value={ticket.gate_info || ''} />
           {/* 3. 出发站名 + 站字 */}
           <StationField field={f.departure_station} name={fmtStation(ticket.departure_station || '')} />
-          {/* 4. 出发站英文 */}
-          <Field field={f.departure_station_en} value={ticket.departure_station_en || toStationPinyin(ticket.departure_station || '')} />
+          {/* 4. 出发站英文 — 拼音超13字母左移 */}
+          <Field
+            field={{
+              ...f.departure_station_en,
+              x: (ticket.departure_station_en || toStationPinyin(ticket.departure_station || '')).length > 13
+                ? 10 : f.departure_station_en.x,
+            }}
+            value={ticket.departure_station_en || toStationPinyin(ticket.departure_station || '')}
+          />
           {/* 5. 车次 */}
           <Field field={f.train_number} value={ticket.train_number || ''} />
           {/* 车次下方长箭头 ———► */}
           <LongArrow show={!!ticket.train_number} />
           {/* 6. 到达站名 + 站字 */}
           <StationField field={f.arrival_station} name={fmtStation(ticket.arrival_station || '')} alignRight />
-          {/* 7. 到达站英文 */}
-          <Field field={f.arrival_station_en} value={ticket.arrival_station_en || toStationPinyin(ticket.arrival_station || '')} />
+          {/* 7. 到达站英文 — 站名≥3字则与中文左对齐 */}
+          <Field
+            field={{
+              ...f.arrival_station_en,
+              x: (ticket.arrival_station || '').replace(/站$/, '').length >= 3
+                ? f.arrival_station.x : f.arrival_station_en.x,
+            }}
+            value={ticket.arrival_station_en || toStationPinyin(ticket.arrival_station || '')}
+          />
           {/* 8. 发车时间 */}
           <Field field={f.departure_info} value={fmtDeparture()} />
           {/* 9. 票价 */}

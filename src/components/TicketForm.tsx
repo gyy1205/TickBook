@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { Ticket } from '../types';
 import { TEMPLATES } from '../config/templates';
+import { fetchTickets } from '../services/ticketService';
 import TicketTemplate from './TicketTemplate';
 
 interface Props {
@@ -11,6 +12,15 @@ interface Props {
 
 export default function TicketForm({ initial, onSave, saving }: Props) {
   const [ticket, setTicket] = useState<Ticket>(initial);
+  const [history, setHistory] = useState<Ticket[]>([]);
+
+  useEffect(() => {
+    fetchTickets().then(setHistory).catch(() => {});
+  }, []);
+
+  // 从历史记录中提取唯一值
+  const uniqueValues = (field: keyof Ticket) =>
+    [...new Set(history.map((t) => String(t[field] || '')).filter(Boolean))];
 
   const update = (field: keyof Ticket, value: string | number | boolean) => {
     setTicket((prev) => ({ ...prev, [field]: value }));
@@ -94,8 +104,12 @@ export default function TicketForm({ initial, onSave, saving }: Props) {
               value={ticket.departure_station}
               onChange={(e) => update('departure_station', e.target.value)}
               placeholder="如 北京南"
+              list="history_departure"
               className={inputClass}
             />
+            <datalist id="history_departure">
+              {uniqueValues('departure_station').map((v) => <option key={v} value={v} />)}
+            </datalist>
           </div>
           <div>
             <label className={labelClass}>到达站</label>
@@ -104,8 +118,12 @@ export default function TicketForm({ initial, onSave, saving }: Props) {
               value={ticket.arrival_station}
               onChange={(e) => update('arrival_station', e.target.value)}
               placeholder="如 上海虹桥"
+              list="history_arrival"
               className={inputClass}
             />
+            <datalist id="history_arrival">
+              {uniqueValues('arrival_station').map((v) => <option key={v} value={v} />)}
+            </datalist>
           </div>
         </div>
 
@@ -146,19 +164,17 @@ export default function TicketForm({ initial, onSave, saving }: Props) {
         <div className="grid grid-cols-3 gap-3">
           <div>
             <label className={labelClass}>座位等级</label>
-            <select
+            <input
+              type="text"
               value={ticket.seat_class}
               onChange={(e) => update('seat_class', e.target.value)}
+              list="history_seat_class"
+              placeholder="如 二等座"
               className={inputClass}
-            >
-              <option>商务座</option>
-              <option>一等座</option>
-              <option>二等座</option>
-              <option>软卧</option>
-              <option>硬卧</option>
-              <option>硬座</option>
-              <option>无座</option>
-            </select>
+            />
+            <datalist id="history_seat_class">
+              {uniqueValues('seat_class').map((v) => <option key={v} value={v} />)}
+            </datalist>
           </div>
           <div>
             <label className={labelClass}>车厢号</label>
@@ -191,8 +207,12 @@ export default function TicketForm({ initial, onSave, saving }: Props) {
               value={ticket.passenger_name}
               onChange={(e) => update('passenger_name', e.target.value)}
               placeholder="姓名"
+              list="history_passenger_name"
               className={inputClass}
             />
+            <datalist id="history_passenger_name">
+              {uniqueValues('passenger_name').map((v) => <option key={v} value={v} />)}
+            </datalist>
           </div>
           <div>
             <label className={labelClass}>票价 (¥)</label>
@@ -215,8 +235,12 @@ export default function TicketForm({ initial, onSave, saving }: Props) {
             value={ticket.passenger_id}
             onChange={(e) => update('passenger_id', e.target.value)}
             placeholder="如 320621200401010756（脱敏存储）"
+            list="history_passenger_id"
             className={inputClass}
           />
+          <datalist id="history_passenger_id">
+            {uniqueValues('passenger_id').map((v) => <option key={v} value={v} />)}
+          </datalist>
         </div>
 
         {/* 票号 */}

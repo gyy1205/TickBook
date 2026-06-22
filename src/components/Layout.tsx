@@ -4,6 +4,7 @@ import Header from './Header';
 const navItems = [
   { to: '/', label: '我的票据' },
   { to: '/statistics', label: '数据统计' },
+  { to: '/map', label: '足迹地图' },
 ];
 
 export default function Layout() {

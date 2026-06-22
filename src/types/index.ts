@@ -42,7 +42,7 @@ export const emptyTicket: Ticket = {
   passenger_name: '',
   price: 0,
   serial_number: '',
-  notes: '',
+  notes: '仅供报销使用',
   gate_info: '检票口：',
   departure_station_en: '',
   arrival_station_en: '',
