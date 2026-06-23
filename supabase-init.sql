@@ -5,7 +5,7 @@
 CREATE TABLE tickets (
   id              UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   user_id         UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
-  ticket_type     VARCHAR(20)  DEFAULT 'train' CHECK (ticket_type IN ('train', 'reimbursement')),
+  ticket_type     VARCHAR(30)  DEFAULT 'train' CHECK (ticket_type IN ('train', 'reimbursement', 'reimbursement_no_travel')),
   train_number    VARCHAR(20)  DEFAULT '',
   departure_station VARCHAR(50) DEFAULT '',
   arrival_station VARCHAR(50)  DEFAULT '',

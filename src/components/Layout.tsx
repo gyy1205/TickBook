@@ -2,9 +2,10 @@ import { Outlet, NavLink } from 'react-router-dom';
 import Header from './Header';
 
 const navItems = [
-  { to: '/', label: '我的票据' },
-  { to: '/statistics', label: '数据统计' },
-  { to: '/map', label: '足迹地图' },
+  { to: '/', label: '我的票据', icon: '🎫' },
+  { to: '/statistics', label: '数据统计', icon: '📊' },
+  { to: '/map', label: '足迹地图', icon: '🗺️' },
+  { to: '/report', label: '年度报告', icon: '🏆' },
 ];
 
 export default function Layout() {
@@ -28,7 +29,7 @@ export default function Layout() {
                   }`
                 }
               >
-                {item.label}
+                <span className="mr-1.5">{item.icon}</span>{item.label}
               </NavLink>
             ))}
           </nav>

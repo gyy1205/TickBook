@@ -5,9 +5,11 @@ import {
   computeProvinceVisits, ALL_PROVINCES, PROVINCE_CODES, stationToCity,
   type ProvinceVisit,
 } from '../utils/stationMap';
+import YearHeatmap from '../components/YearHeatmap';
 
-const PROV_GEO_URL = 'https://geo.datav.aliyun.com/areas_v3/bound/100000_full.json';
-const CITY_GEO_BASE = 'https://geo.datav.aliyun.com/areas_v3/bound/';
+const GEO_BASE = import.meta.env.BASE_URL + 'geo/';
+const PROV_GEO_URL = GEO_BASE + '100000_full.json';
+const CITY_GEO_BASE = GEO_BASE;
 
 type MapMode = 'province' | 'city';
 
@@ -19,6 +21,7 @@ export default function MapPage() {
   const [selectedProv, setSelectedProv] = useState<ProvinceVisit | null>(null);
   const [mode, setMode] = useState<MapMode>('province');
   const [allTickets, setAllTickets] = useState<any[]>([]);
+  const [heatYear, setHeatYear] = useState(new Date().getFullYear());
 
   useEffect(() => {
     fetchTickets()
@@ -118,7 +121,7 @@ export default function MapPage() {
       series: [{
         type: 'map', map: 'china_map', roam: false,
         itemStyle: { areaColor: '#e5e7eb', borderColor: '#fff', borderWidth: 1 },
-        emphasis: { itemStyle: { areaColor: '#fbbf24' }, label: { show: true, color: '#333' } },
+        emphasis: { itemStyle: { areaColor: '#fbbf24',  }, label: { show: true, color: '#333' } },
         data: mapData,
       }],
     }, true);
@@ -159,6 +162,7 @@ export default function MapPage() {
       visualMap: { min: 0, max: 1, show: false, inRange: { color: ['#e5e7eb', '#3b82f6'] } },
       series: [{
         type: 'map', map: 'china_city_map', roam: false,
+        label: { show: false },
         hoverAnimation: false,
         itemStyle: { areaColor: '#e5e7eb', borderColor: '#fff', borderWidth: 0.5 },
         emphasis: { itemStyle: { areaColor: '#fbbf24' }, label: { show: false } },
@@ -169,6 +173,11 @@ export default function MapPage() {
     chart.off('click');
     chart.on('click', (params: any) => setSelectedProv(params.data?.visit || null));
   }
+
+  const heatmapYears = useMemo(() => {
+    const years = [...new Set(allTickets.filter((t: any) => t.departure_date).map((t: any) => parseInt(t.departure_date.substring(0, 4))))] as number[];
+    return years.sort((a, b) => a - b);
+  }, [allTickets]);
 
   if (loading) {
     return (
@@ -205,7 +214,7 @@ export default function MapPage() {
       </div>
 
       {/* 地图 */}
-      <div className="relative bg-white rounded-lg shadow-sm border border-gray-200 w-full" style={{ height: 620 }}>
+      <div className="relative bg-white rounded-lg shadow-sm border border-gray-200 w-full" style={{ height: 600 }}>
         {mapLoading && (
           <div className="absolute inset-0 flex items-center justify-center bg-white/80 z-10 rounded-lg">
             <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600" />
@@ -277,6 +286,15 @@ export default function MapPage() {
           <p className="text-gray-400 text-sm text-center py-8">暂无足迹数据</p>
         )}
       </div>
+
+      {/* 年度热力图 */}
+      <YearHeatmap
+        tickets={allTickets}
+        year={heatYear}
+        onYearChange={setHeatYear}
+        availableYears={heatmapYears}
+      />
+
     </div>
   );
 }

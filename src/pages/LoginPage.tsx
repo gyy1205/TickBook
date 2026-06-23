@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useAuthStore } from '../stores/authStore';
 
@@ -112,6 +112,11 @@ export default function LoginPage() {
               {isRegister ? '去登录' : '去注册'}
             </button>
           </p>
+          {!isRegister && (
+            <p className="text-center">
+              <Link to="/forgot-password" className="text-xs text-gray-400 hover:text-blue-600">忘记密码？</Link>
+            </p>
+          )}
         </form>
       </div>
     </div>

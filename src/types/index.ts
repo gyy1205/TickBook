@@ -1,7 +1,7 @@
 export interface Ticket {
   id?: string;
   user_id?: string;
-  ticket_type: 'train' | 'reimbursement';
+  ticket_type: 'train' | 'reimbursement' | 'reimbursement_no_travel';
   train_number: string;
   departure_station: string;
   arrival_station: string;
@@ -19,6 +19,10 @@ export interface Ticket {
   departure_station_en: string;
   arrival_station_en: string;
   is_student: boolean;
+  is_online: boolean;
+  is_discount: boolean;
+  is_exchange: boolean;
+  is_replacement: boolean;
   passenger_id: string;
   service_text: string;
   qr_content: string;
@@ -47,6 +51,10 @@ export const emptyTicket: Ticket = {
   departure_station_en: '',
   arrival_station_en: '',
   is_student: false,
+  is_online: false,
+  is_discount: false,
+  is_exchange: false,
+  is_replacement: false,
   passenger_id: '',
   service_text: '买票请到12306 发货请到95306\n中国铁路祝您旅途愉快',
   qr_content: '',

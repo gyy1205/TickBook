@@ -11,7 +11,9 @@ export default function TicketDetail() {
   const [ticket, setTicket] = useState<Ticket | null>(null);
   const [loading, setLoading] = useState(true);
   const [savingImg, setSavingImg] = useState(false);
+  const [sharing, setSharing] = useState(false);
   const ticketRef = useRef<HTMLDivElement>(null);
+  const shareRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!id) return;
@@ -23,6 +25,22 @@ export default function TicketDetail() {
       })
       .finally(() => setLoading(false));
   }, [id, navigate]);
+
+  const handleShareCard = async () => {
+    if (!shareRef.current) return;
+    setSharing(true);
+    try {
+      const dataUrl = await domToPng(shareRef.current, { backgroundColor: '#f8fafc', scale: 2 });
+      const link = document.createElement('a');
+      link.download = `ticket_${ticket?.train_number || 'card'}.png`;
+      link.href = dataUrl;
+      link.click();
+    } catch (err) {
+      console.error('生成分享卡片失败:', err);
+    } finally {
+      setSharing(false);
+    }
+  };
 
   const handleSaveImage = async () => {
     if (!ticketRef.current) return;
@@ -79,6 +97,13 @@ export default function TicketDetail() {
             {savingImg ? '保存中...' : '保存图片'}
           </button>
           <button
+            onClick={handleShareCard}
+            disabled={sharing}
+            className="text-sm text-purple-600 hover:text-purple-800"
+          >
+            {sharing ? '生成中...' : '分享卡片'}
+          </button>
+          <button
             onClick={handleDelete}
             className="text-sm text-red-400 hover:text-red-600"
           >
@@ -89,6 +114,50 @@ export default function TicketDetail() {
 
       <div ref={ticketRef}>
         <TicketTemplate ticket={ticket} />
+      </div>
+
+      {/* 分享卡片（隐藏，截图用） */}
+      <div ref={shareRef} className="fixed left-[-9999px] top-0" style={{ width: 400 }}>
+        <div className="bg-gradient-to-br from-white to-slate-50 rounded-2xl p-6 shadow-lg">
+          {/* 卡片标题 */}
+          <div className="text-center mb-4">
+            <p className="text-xs text-gray-400 tracking-widest uppercase">Travel Memory</p>
+            <p className="text-lg font-bold text-gray-800">{ticket.train_number}</p>
+          </div>
+          {/* 路线 */}
+          <div className="flex items-center justify-center gap-4 mb-4">
+            <div className="text-center">
+              <p className="text-2xl font-bold text-gray-800">{ticket.departure_station}</p>
+              <p className="text-xs text-gray-400">{ticket.departure_time}</p>
+            </div>
+            <span className="text-gray-300 text-2xl">→</span>
+            <div className="text-center">
+              <p className="text-2xl font-bold text-gray-800">{ticket.arrival_station}</p>
+              <p className="text-xs text-gray-400">{ticket.arrival_time}</p>
+            </div>
+          </div>
+          {/* 日期 */}
+          <p className="text-center text-sm text-gray-500 mb-4">{ticket.departure_date}</p>
+          {/* 详细信息 */}
+          <div className="grid grid-cols-3 gap-3 text-center mb-4">
+            <div className="bg-blue-50 rounded-lg py-2">
+              <p className="text-xs text-gray-400">座位</p>
+              <p className="text-sm font-medium text-gray-700">{ticket.seat_class}</p>
+            </div>
+            <div className="bg-blue-50 rounded-lg py-2">
+              <p className="text-xs text-gray-400">票价</p>
+              <p className="text-sm font-bold text-orange-500">¥{ticket.price}</p>
+            </div>
+            <div className="bg-blue-50 rounded-lg py-2">
+              <p className="text-xs text-gray-400">乘客</p>
+              <p className="text-sm font-medium text-gray-700">{ticket.passenger_name}</p>
+            </div>
+          </div>
+          {/* 底部 */}
+          <div className="text-center pt-3 border-t border-gray-200">
+            <p className="text-xs text-gray-400">— TickBook · 记录每一段旅程 —</p>
+          </div>
+        </div>
       </div>
     </div>
   );

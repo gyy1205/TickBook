@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import type { Ticket } from '../types';
 import { TEMPLATES } from '../config/templates';
 import { fetchTickets } from '../services/ticketService';
+import StationInput from './StationInput';
 import TicketTemplate from './TicketTemplate';
 
 interface Props {
@@ -42,31 +43,54 @@ export default function TicketForm({ initial, onSave, saving }: Props) {
         {/* 票种选择 */}
         <div>
           <label className={labelClass}>票种</label>
-          <div className="flex gap-4">
-            {(['train', 'reimbursement'] as const).map((type) => (
-              <label key={type} className="flex items-center gap-2 cursor-pointer">
+          <div className="flex gap-4 flex-wrap">
+            {([
+              ['train', '火车票'],
+              ['reimbursement', '报销凭证（乘车）'],
+              ['reimbursement_no_travel', '报销凭证（未乘车）'],
+            ] as const).map(([value, label]) => (
+              <label key={value} className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="radio"
                   name="ticket_type"
-                  checked={ticket.ticket_type === type}
-                  onChange={() => update('ticket_type', type)}
+                  checked={ticket.ticket_type === value}
+                  onChange={() => update('ticket_type', value)}
                   className="accent-blue-600"
                 />
-                <span className="text-sm text-gray-700">
-                  {type === 'train' ? '火车票' : '报销凭证'}
-                </span>
+                <span className="text-sm text-gray-700">{label}</span>
               </label>
             ))}
           </div>
-          <label className="flex items-center gap-2 cursor-pointer ml-4">
-            <input
-              type="checkbox"
-              checked={ticket.is_student}
-              onChange={(e) => update('is_student', e.target.checked)}
-              className="accent-blue-600"
-            />
-            <span className="text-sm text-gray-700">学生票</span>
-          </label>
+          {ticket.ticket_type === 'reimbursement_no_travel' && (
+            <p className="text-xs text-amber-600 mt-1">未乘车不计入站点统计和乘车时长</p>
+          )}
+          <div className="flex gap-4 flex-wrap">
+            <label className="flex items-center gap-1 cursor-pointer">
+              <input type="checkbox" checked={ticket.is_online}
+                onChange={(e) => update('is_online', e.target.checked)} className="accent-blue-600" />
+              <span className="text-sm text-gray-600">网络票</span>
+            </label>
+            <label className="flex items-center gap-1 cursor-pointer">
+              <input type="checkbox" checked={ticket.is_discount}
+                onChange={(e) => update('is_discount', e.target.checked)} className="accent-blue-600" />
+              <span className="text-sm text-gray-600">优惠票</span>
+            </label>
+            <label className="flex items-center gap-1 cursor-pointer">
+              <input type="checkbox" checked={ticket.is_student}
+                onChange={(e) => update('is_student', e.target.checked)} className="accent-blue-600" />
+              <span className="text-sm text-gray-600">学生票</span>
+            </label>
+            <label className="flex items-center gap-1 cursor-pointer">
+              <input type="checkbox" checked={ticket.is_exchange}
+                onChange={(e) => update('is_exchange', e.target.checked)} className="accent-blue-600" />
+              <span className="text-sm text-gray-600">兑换票</span>
+            </label>
+            <label className="flex items-center gap-1 cursor-pointer">
+              <input type="checkbox" checked={ticket.is_replacement}
+                onChange={(e) => update('is_replacement', e.target.checked)} className="accent-blue-600" />
+              <span className="text-sm text-gray-600">补票</span>
+            </label>
+          </div>
         </div>
 
         {/* 模板选择 */}
@@ -99,31 +123,19 @@ export default function TicketForm({ initial, onSave, saving }: Props) {
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className={labelClass}>出发站</label>
-            <input
-              type="text"
+            <StationInput
               value={ticket.departure_station}
-              onChange={(e) => update('departure_station', e.target.value)}
+              onChange={(v) => update('departure_station', v)}
               placeholder="如 北京南"
-              list="history_departure"
-              className={inputClass}
             />
-            <datalist id="history_departure">
-              {uniqueValues('departure_station').map((v) => <option key={v} value={v} />)}
-            </datalist>
           </div>
           <div>
             <label className={labelClass}>到达站</label>
-            <input
-              type="text"
+            <StationInput
               value={ticket.arrival_station}
-              onChange={(e) => update('arrival_station', e.target.value)}
+              onChange={(v) => update('arrival_station', v)}
               placeholder="如 上海虹桥"
-              list="history_arrival"
-              className={inputClass}
             />
-            <datalist id="history_arrival">
-              {uniqueValues('arrival_station').map((v) => <option key={v} value={v} />)}
-            </datalist>
           </div>
         </div>
 
@@ -150,6 +162,7 @@ export default function TicketForm({ initial, onSave, saving }: Props) {
         </div>
 
         {/* 到达时间 */}
+        {ticket.ticket_type !== 'reimbursement_no_travel' && (
         <div>
           <label className={labelClass}>到达时间</label>
           <input
@@ -159,6 +172,7 @@ export default function TicketForm({ initial, onSave, saving }: Props) {
             className={inputClass}
           />
         </div>
+        )}
 
         {/* 座位信息 */}
         <div className="grid grid-cols-3 gap-3">
@@ -234,7 +248,7 @@ export default function TicketForm({ initial, onSave, saving }: Props) {
             type="text"
             value={ticket.passenger_id}
             onChange={(e) => update('passenger_id', e.target.value)}
-            placeholder="如 320621200401010756（脱敏存储）"
+            placeholder="如 3206212026****0000（脱敏存储）"
             list="history_passenger_id"
             className={inputClass}
           />

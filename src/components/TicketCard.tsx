@@ -12,9 +12,13 @@ export default function TicketCard({ ticket, onDelete }: Props) {
       <div className="flex justify-between items-start mb-3">
         <div>
           <span className="text-lg font-bold text-gray-800">{ticket.train_number}</span>
-          <span className="ml-2 text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded">
-            {ticket.seat_class}
-          </span>
+          {ticket.ticket_type === 'reimbursement_no_travel' ? (
+            <span className="ml-2 text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded">退票</span>
+          ) : (
+            <span className="ml-2 text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded">
+              {ticket.seat_class}
+            </span>
+          )}
         </div>
         <span className="text-lg font-bold text-orange-500">¥{ticket.price}</span>
       </div>
@@ -38,7 +42,7 @@ export default function TicketCard({ ticket, onDelete }: Props) {
         <div className="flex justify-between items-center text-sm text-gray-700 mt-1">
           <span>{ticket.departure_date}</span>
           <span>
-            {ticket.passenger_name}<span className="text-gray-300 mx-1">|</span>{ticket.carriage_no}车{ticket.seat_no}号
+            {ticket.passenger_name}<span className="text-gray-300 mx-1">|</span>{ticket.carriage_no}车{ticket.seat_no}{ticket.seat_no !== '无座' ? '号' : ''}
           </span>
         </div>
       </div>

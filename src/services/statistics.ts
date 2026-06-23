@@ -26,14 +26,15 @@ export interface StatisticsData {
 }
 
 export function computeStatistics(tickets: Ticket[]): StatisticsData {
+  const travelTickets = tickets.filter((t) => t.ticket_type !== 'reimbursement_no_travel');
   return {
     totalCount: tickets.length,
     totalSpending: sumPrice(tickets),
-    stationCount: countUniqueStations(tickets).count,
-    totalDuration: calcTotalDuration(tickets),
+    stationCount: countUniqueStations(travelTickets).count,
+    totalDuration: calcTotalDuration(travelTickets),
     byType: groupByTrainClass(tickets),
     byMonth: groupByMonth(tickets),
-    topStations: topStations(tickets, 10),
+    topStations: topStations(travelTickets, 10),
     seatPosition: groupBySeatPosition(tickets),
     emuSeat: groupByEMUSeat(tickets),
     berth: groupByBerth(tickets),

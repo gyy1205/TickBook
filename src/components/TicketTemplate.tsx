@@ -138,7 +138,8 @@ export default function TicketTemplate({ ticket }: Props) {
             <>{'¥ '}{Number(ticket.price).toFixed(1)}元</>
           : ''} />
           {/* 10. 学生票标识 */}
-          <Field field={f.student_mark} value={ticket.is_student ? '学' : ''} />
+          {/* 标记圆圈：网/惠/学 */}
+          <MarkCircles ticket={ticket} f={f} />
           {/* 11. 车厢座位号 */}
           <Field field={f.carriage_info} value={fmtCarriage()} />
           {/* 12. 座位等级 */}
@@ -282,6 +283,54 @@ function ServiceTextBox({ text }: { text: string }) {
     >
       {lines.map((line, i) => (
         <span key={i}>{line}</span>
+      ))}
+    </div>
+  );
+}
+
+// 票种标记圆圈：网/惠/学
+function MarkCircles({ ticket, f }: { ticket: Partial<Ticket>; f: ReturnType<typeof getTemplate>['fields'] }) {
+  const marks: string[] = [];
+  if (ticket.is_online) marks.push('网');
+  if (ticket.is_discount) marks.push('惠');
+  if (ticket.is_student) marks.push('学');
+  if (ticket.is_exchange) marks.push('兑');
+  if (ticket.is_replacement) marks.push('补');
+  if (marks.length === 0) return null;
+
+  const baseY = f.student_mark?.y || 45;
+
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        left: '50%',
+        top: `${baseY}%`,
+        transform: 'translate(-50%, -50%)',
+        display: 'flex',
+        gap: '1cqw',
+        alignItems: 'center',
+      }}
+    >
+      {marks.map((m) => (
+        <span
+          key={m}
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: `${5}cqw`,
+            height: `${5}cqw`,
+            borderRadius: '50%',
+            border: '1px solid #1a1a1a',
+            fontSize: `${3.8}cqw`,
+            color: '#1a1a1a',
+            fontWeight: 500,
+            fontFamily: "'SimHei','Microsoft YaHei',sans-serif",
+          }}
+        >
+          {m}
+        </span>
       ))}
     </div>
   );

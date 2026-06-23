@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import type { Ticket } from '../types';
 import { emptyTicket } from '../types';
 import { createTicket } from '../services/ticketService';
+import { playSave } from '../utils/sound';
 import TicketForm from '../components/TicketForm';
 
 export default function TicketCreate() {
@@ -13,6 +14,7 @@ export default function TicketCreate() {
     setSaving(true);
     try {
       await createTicket(ticket);
+      playSave();
       navigate('/', { replace: true });
     } catch (err: any) {
       console.error('保存失败:', err);

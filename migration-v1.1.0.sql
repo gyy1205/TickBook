@@ -12,3 +12,6 @@ ALTER TABLE tickets ADD COLUMN IF NOT EXISTS is_student BOOLEAN DEFAULT false;
 ALTER TABLE tickets ADD COLUMN IF NOT EXISTS passenger_id VARCHAR(30) DEFAULT '';
 ALTER TABLE tickets ADD COLUMN IF NOT EXISTS service_text TEXT DEFAULT '买票请到12306\n发货请到95306';
 ALTER TABLE tickets ADD COLUMN IF NOT EXISTS qr_content TEXT DEFAULT '';
+ALTER TABLE tickets ALTER COLUMN ticket_type TYPE VARCHAR(30);
+ALTER TABLE tickets DROP CONSTRAINT IF EXISTS tickets_ticket_type_check;
+ALTER TABLE tickets ADD CONSTRAINT tickets_ticket_type_check CHECK (ticket_type IN ('train', 'reimbursement', 'reimbursement_no_travel'));
