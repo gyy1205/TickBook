@@ -63,16 +63,28 @@ export default function MapPage() {
         } else {
           // 城市模式：加载全部省份的城市 GeoJSON 并合并为全国市级地图
           const MUNICIPALITIES = new Set(['北京市', '天津市', '上海市', '重庆市']);
-          let cached = window['__cityGeoJsonCache' as any] as any;
+          let cached = window['__cityGeoJsonCache_v2' as any] as any;
           if (!cached) {
             const geos = await Promise.all(
               Object.entries(PROVINCE_CODES).map(async ([prov, code]) => {
                 const geo = await fetch(`${CITY_GEO_BASE}${code}_full.json`).then((r) => r.json()).catch(() => null);
-                // 直辖市：所有区统一改名为该直辖市
-                if (geo?.features && MUNICIPALITIES.has(prov)) {
+                // 直辖市：将多个区的 geometry 合并为一个 MultiPolygon，避免各区分别渲染造成重叠
+                if (geo?.features && MUNICIPALITIES.has(prov) && geo.features.length > 0) {
+                  const polygons: any[] = [];
                   geo.features.forEach((f: any) => {
-                    if (f.properties) f.properties.name = prov;
+                    if (f.geometry?.type === 'Polygon') {
+                      polygons.push(f.geometry.coordinates);
+                    } else if (f.geometry?.type === 'MultiPolygon') {
+                      polygons.push(...f.geometry.coordinates);
+                    }
                   });
+                  if (polygons.length > 0) {
+                    geo.features = [{
+                      type: 'Feature',
+                      properties: { name: prov },
+                      geometry: { type: 'MultiPolygon', coordinates: polygons }
+                    }];
+                  }
                 }
                 return geo;
               })
@@ -80,7 +92,7 @@ export default function MapPage() {
             const allFeatures: any[] = [];
             geos.forEach((g) => { if (g?.features) allFeatures.push(...g.features); });
             cached = { type: 'FeatureCollection', features: allFeatures };
-            window['__cityGeoJsonCache' as any] = cached;
+            window['__cityGeoJsonCache_v2' as any] = cached;
           }
           echarts.registerMap('china_city_map', cached as any);
           renderCityMap(chart);

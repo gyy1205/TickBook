@@ -5,8 +5,8 @@ const navItems = [
   { to: '/', label: '我的票据', icon: '🎫' },
   { to: '/statistics', label: '数据统计', icon: '📊' },
   { to: '/map', label: '足迹地图', icon: '🗺️' },
-  { to: '/report', label: '年度报告', icon: '🏆' },
   { to: '/book', label: '票据展示', icon: '📖' },
+  { to: '/report', label: '年度报告', icon: '🏆' },
 ];
 
 export default function Layout() {
