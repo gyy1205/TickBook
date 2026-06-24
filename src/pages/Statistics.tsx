@@ -282,6 +282,51 @@ export default function Statistics() {
         )}
       </div>
 
+      {/* ===== 车次频次统计 ===== */}
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-5 mt-6">
+        <h2 className="text-base font-medium text-gray-700 mb-4">车次频次排行</h2>
+        {chartStats.byTrainNumber.length > 0 ? (
+          <div className="space-y-2">
+            {chartStats.byTrainNumber.slice(0, 15).map((t, i) => {
+              const maxCount = chartStats.byTrainNumber[0].count;
+              const pct = (t.count / maxCount) * 100;
+              const barColors = [
+                'bg-gradient-to-r from-[#93c5fd] to-[#60a5fa]',
+                'bg-gradient-to-r from-[#6ee7b7] to-[#34d399]',
+                'bg-gradient-to-r from-[#fcd34d] to-[#fbbf24]',
+                'bg-gradient-to-r from-[#c4b5fd] to-[#a78bfa]',
+                'bg-gradient-to-r from-[#f9a8d4] to-[#f472b6]',
+              ];
+              return (
+                <div key={t.name} className="flex items-center gap-3">
+                  <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white flex-shrink-0 ${barColors[i] || 'bg-gradient-to-r from-gray-300 to-gray-400'}`}>
+                    {i + 1}
+                  </span>
+                  <span className="text-sm text-gray-700 w-20 flex-shrink-0 font-mono">{t.name}</span>
+                  <div className="flex-1 h-5 bg-gray-100 rounded-full overflow-hidden">
+                    <div
+                      className={`h-full rounded-full ${barColors[i] || 'bg-gradient-to-r from-gray-300 to-gray-400'} transition-all duration-500`}
+                      style={{ width: `${pct}%` }}
+                    />
+                  </div>
+                  <span className="text-sm text-gray-500 w-10 text-right flex-shrink-0">{t.count}次</span>
+                  {t.total > 0 && (
+                    <span className="text-xs text-gray-400 w-16 text-right flex-shrink-0">¥{t.total.toFixed(0)}</span>
+                  )}
+                </div>
+              );
+            })}
+            {chartStats.byTrainNumber.length > 15 && (
+              <p className="text-xs text-gray-400 text-center pt-1">
+                还有 {chartStats.byTrainNumber.length - 15} 个车次未显示
+              </p>
+            )}
+          </div>
+        ) : (
+          <p className="text-gray-400 text-sm text-center py-8">暂无车次数据</p>
+        )}
+      </div>
+
       {/* ===== 坐席统计 ===== */}
       {chartStats && <SeatStats stats={chartStats} />}
 

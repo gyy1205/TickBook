@@ -5,6 +5,7 @@ import {
   countUniqueStations,
   groupByMonth,
   groupByTrainClass,
+  groupByTrainNumber,
   topStations,
   groupBySeatPosition,
   groupByEMUSeat,
@@ -20,6 +21,7 @@ export interface StatisticsData {
   byType: { type: string; label: string; count: number; total: number }[];
   byMonth: { month: string; count: number; total: number }[];
   topStations: { name: string; count: number }[];
+  byTrainNumber: { name: string; count: number; total: number }[];
   seatPosition: SeatPositionStats;
   emuSeat: EMUSeatStats;
   berth: BerthStats;
@@ -35,6 +37,7 @@ export function computeStatistics(tickets: Ticket[]): StatisticsData {
     byType: groupByTrainClass(tickets),
     byMonth: groupByMonth(tickets),
     topStations: topStations(travelTickets, 10),
+    byTrainNumber: groupByTrainNumber(tickets),
     seatPosition: groupBySeatPosition(tickets),
     emuSeat: groupByEMUSeat(tickets),
     berth: groupByBerth(tickets),

@@ -116,6 +116,24 @@ export function groupByTrainClass(
     .sort((a, b) => order.indexOf(a.label) - order.indexOf(b.label));
 }
 
+// 按车次号分组统计
+export function groupByTrainNumber(
+  tickets: Ticket[]
+): { name: string; count: number; total: number }[] {
+  const map = new Map<string, { count: number; total: number }>();
+  tickets.forEach((t) => {
+    if (!t.train_number) return;
+    const name = t.train_number.trim();
+    const entry = map.get(name) || { count: 0, total: 0 };
+    entry.count++;
+    if (t.price && t.price > 0) entry.total += t.price;
+    map.set(name, entry);
+  });
+  return Array.from(map.entries())
+    .map(([name, val]) => ({ name, ...val }))
+    .sort((a, b) => b.count - a.count);
+}
+
 // 高频站点 TOP N
 export function topStations(
   tickets: Ticket[],
