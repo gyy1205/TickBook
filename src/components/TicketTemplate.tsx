@@ -215,15 +215,15 @@ function LongArrow({ show }: { show: boolean }) {
       }}
     >
       {/* 横线 */}
-      <div style={{ flex: 1, borderTop: '2px solid #1a1a1a', height: 0 }} />
+      <div style={{ flex: 1, borderTop: '1.7px solid #1a1a1a', height: 0 }} />
       {/* 向右箭头 */}
       <div
         style={{
           width: 0,
           height: 0,
           borderLeft: '8px solid #1a1a1a',
-          borderTop: '3px solid transparent',
-          borderBottom: '3px solid transparent',
+          borderTop: '2.5px solid transparent',
+          borderBottom: '2.5px solid transparent',
         }}
       />
     </div>
@@ -268,7 +268,7 @@ function ServiceTextBox({ text }: { text: string }) {
         right: '40%',  // → 右边界到 60%
         top: '77%',
         bottom: '10%',
-        border: '1.5px dashed #888',
+        border: '1.5px dashed #555',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',

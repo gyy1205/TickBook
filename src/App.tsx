@@ -14,6 +14,7 @@ import TicketDetail from './pages/TicketDetail';
 import Statistics from './pages/Statistics';
 import MapPage from './pages/MapPage';
 import AnnualReport from './pages/AnnualReport';
+import BookPage from './pages/BookPage';
 
 export default function App() {
   const { setSession, refreshSession } = useAuthStore();
@@ -48,6 +49,7 @@ export default function App() {
           <Route path="/statistics" element={<Statistics />} />
           <Route path="/map" element={<MapPage />} />
           <Route path="/report" element={<AnnualReport />} />
+          <Route path="/book" element={<BookPage />} />
         </Route>
       </Routes>
     </HashRouter>
