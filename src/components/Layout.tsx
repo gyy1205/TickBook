@@ -1,22 +1,23 @@
 import { Outlet, NavLink } from 'react-router-dom';
+import { Ticket, BarChart3, Map, BookOpen, Trophy } from 'lucide-react';
 import Header from './Header';
 
 const navItems = [
-  { to: '/', label: '我的票据', icon: '🎫' },
-  { to: '/statistics', label: '数据统计', icon: '📊' },
-  { to: '/map', label: '足迹地图', icon: '🗺️' },
-  { to: '/book', label: '票据展示', icon: '📖' },
-  { to: '/report', label: '年度报告', icon: '🏆' },
+  { to: '/', label: '我的票据', Icon: Ticket },
+  { to: '/statistics', label: '数据统计', Icon: BarChart3 },
+  { to: '/map', label: '足迹地图', Icon: Map },
+  { to: '/book', label: '票据展示', Icon: BookOpen },
+  { to: '/report', label: '年度报告', Icon: Trophy },
 ];
 
 export default function Layout() {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen">
       <Header />
       <div className="max-w-6xl mx-auto px-4 py-6 flex gap-6">
         {/* 侧边导航 */}
         <aside className="w-40 flex-shrink-0 hidden sm:block">
-          <nav className="bg-white rounded-lg shadow-sm border border-gray-200 p-2 sticky top-6">
+          <nav className="bg-white/75 backdrop-blur-sm rounded-lg shadow-sm border border-gray-200/60 p-2 sticky top-6">
             {navItems.map((item) => (
               <NavLink
                 key={item.to}
@@ -30,7 +31,7 @@ export default function Layout() {
                   }`
                 }
               >
-                <span className="mr-1.5">{item.icon}</span>{item.label}
+                <item.Icon size={16} className="inline mr-1.5 -mt-0.5" />{item.label}
               </NavLink>
             ))}
           </nav>

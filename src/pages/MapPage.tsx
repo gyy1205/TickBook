@@ -226,7 +226,7 @@ export default function MapPage() {
       </div>
 
       {/* 地图 */}
-      <div className="relative bg-white rounded-lg shadow-sm border border-gray-200 w-full" style={{ height: 600 }}>
+      <div className="relative bg-white/75 backdrop-blur-sm rounded-lg shadow-sm border border-gray-200/60 w-full" style={{ height: 600 }}>
         {mapLoading && (
           <div className="absolute inset-0 flex items-center justify-center bg-white/80 z-10 rounded-lg">
             <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600" />
@@ -237,7 +237,7 @@ export default function MapPage() {
 
       {/* 选中详情 */}
       {selectedProv && (
-        <div className="mt-4 bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+        <div className="mt-4 bg-white/75 backdrop-blur-sm rounded-lg shadow-sm border border-gray-200/60 p-4">
           <h3 className="font-medium text-gray-800 mb-2">{selectedProv.name}</h3>
           <div className="text-sm text-gray-500 space-y-1">
             <p>到访 {selectedProv.count} 次 · 累计消费 ¥{selectedProv.total.toFixed(2)}</p>
@@ -247,7 +247,7 @@ export default function MapPage() {
       )}
 
       {/* 列表 */}
-      <div className="mt-6 bg-white rounded-lg shadow-sm border border-gray-200 p-5">
+      <div className="mt-6 bg-white/75 backdrop-blur-sm rounded-lg shadow-sm border border-gray-200/60 p-5">
         <h2 className="text-base font-medium text-gray-700 mb-3">
           到访{mode === 'province' ? '省份' : '城市'}
         </h2>

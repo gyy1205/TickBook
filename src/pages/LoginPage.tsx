@@ -54,7 +54,7 @@ export default function LoginPage() {
 
         <form
           onSubmit={handleSubmit}
-          className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 space-y-4"
+          className="bg-white/75 backdrop-blur-sm rounded-xl shadow-sm border border-gray-200/60 p-6 space-y-4"
         >
           <h2 className="text-lg font-medium text-gray-800 text-center">
             {isRegister ? '注册' : '登录'}

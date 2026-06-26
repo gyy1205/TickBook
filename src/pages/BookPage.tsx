@@ -1,4 +1,5 @@
 import { Fragment, memo, useCallback, useEffect, useRef, useState } from 'react';
+import { PenLine } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import type { Ticket } from '../types';
 import { fetchTickets, updateTicket } from '../services/ticketService';
@@ -69,7 +70,7 @@ const TicketCard = memo(function TicketCard({
               className="flex items-center justify-between px-4 pt-2 pb-1 select-none"
               style={{ background: 'linear-gradient(to bottom, #fef7ed 60%, transparent)' }}
             >
-              <span className="text-xs font-medium text-amber-700">📝 旅行笔记</span>
+              <span className="text-xs font-medium text-amber-700 flex items-center gap-1"><PenLine size={14} />旅行笔记</span>
               <span className="text-xs text-amber-400">{ticket.train_number}</span>
             </div>
 

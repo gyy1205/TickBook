@@ -68,7 +68,7 @@ export default function YearHeatmap({ tickets, year, onYearChange, availableYear
   const MONTH_LABELS = ['1月', '4月', '7月', '10月'];
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-5 mt-6">
+    <div className="bg-white/75 backdrop-blur-sm rounded-lg shadow-sm border border-gray-200/60 p-5 mt-6">
       {/* 标题栏 */}
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-base font-medium text-gray-700">年度出行热力图</h2>

@@ -30,14 +30,14 @@ export default function ForgotPassword() {
         <h1 className="text-2xl font-bold text-center text-blue-600 mb-8">TickBook</h1>
 
         {sent ? (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 text-center">
+          <div className="bg-white/75 backdrop-blur-sm rounded-xl shadow-sm border border-gray-200/60 p-6 text-center">
             <p className="text-green-600 text-sm mb-4">{msg}</p>
             <Link to="/login" className="text-blue-600 text-sm hover:underline">
               返回登录
             </Link>
           </div>
         ) : (
-          <form onSubmit={handleSend} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 space-y-4">
+          <form onSubmit={handleSend} className="bg-white/75 backdrop-blur-sm rounded-xl shadow-sm border border-gray-200/60 p-6 space-y-4">
             <h2 className="text-lg font-medium text-gray-800 text-center">找回密码</h2>
             {msg && <div className="bg-red-50 text-red-600 text-sm rounded px-3 py-2">{msg}</div>}
             <div>

@@ -8,7 +8,7 @@ interface Props {
 
 export default function TicketCard({ ticket, onDelete }: Props) {
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow">
+    <div className="bg-white/75 backdrop-blur-sm rounded-lg shadow-sm border border-gray-200/60 p-4 hover:shadow-md transition-shadow">
       <div className="flex justify-between items-start mb-3">
         <div>
           <span className="text-lg font-bold text-gray-800">{ticket.train_number}</span>

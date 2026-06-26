@@ -59,7 +59,7 @@ export default function ResetPassword() {
   if (!sessionReady) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-        <div className="w-full max-w-sm bg-white rounded-xl shadow-sm border border-gray-200 p-6 text-center">
+        <div className="w-full max-w-sm bg-white/75 backdrop-blur-sm rounded-xl shadow-sm border border-gray-200/60 p-6 text-center">
           {msg ? (
             <>
               <p className="text-red-500 text-sm mb-4">{msg}</p>
@@ -78,12 +78,12 @@ export default function ResetPassword() {
       <div className="w-full max-w-sm">
         <h1 className="text-2xl font-bold text-center text-blue-600 mb-8">TickBook</h1>
         {done ? (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 text-center">
+          <div className="bg-white/75 backdrop-blur-sm rounded-xl shadow-sm border border-gray-200/60 p-6 text-center">
             <p className="text-green-600 text-sm mb-4">{msg}</p>
             <button onClick={() => navigate('/login')} className="text-blue-600 text-sm hover:underline">去登录</button>
           </div>
         ) : (
-          <form onSubmit={handleReset} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 space-y-4">
+          <form onSubmit={handleReset} className="bg-white/75 backdrop-blur-sm rounded-xl shadow-sm border border-gray-200/60 p-6 space-y-4">
             <h2 className="text-lg font-medium text-gray-800 text-center">设置新密码</h2>
             {msg && <div className="bg-red-50 text-red-600 text-sm rounded px-3 py-2">{msg}</div>}
             <div>
